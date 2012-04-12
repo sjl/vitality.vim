@@ -1,0 +1,351 @@
+*vitality.txt*   make Vim play nicely with iTerm2 and tmux
+
+    █████ █      ██                       ███
+ ██████  █    █████ █       █              ███     █       █
+██   █  █       ██████     ██               ██    ███     ██
+    █  ██       █ ███      ██               ██     █      ██
+   █  ███      █         ████████           ██          ████████
+  ██   ██      █  ███   ████████   ████     ██   ███   ████████ ██   ████
+  ██   ██      █   ███     ██     █ ███  █  ██    ███     ██     ██    ███  █
+  ██   ██     █     ██     ██    █   ████   ██     ██     ██     ██     ████
+  ██   ██     █     ██     ██   ██    ██    ██     ██     ██     ██      ██
+  ██   ██     █     ██     ██   ██    ██    ██     ██     ██     ██      ██
+   ██  ██    █      ██     ██   ██    ██    ██     ██     ██     ██      ██
+    ██ █     █      ██     ██   ██    ██    ██     ██     ██     ██      ██
+     ███     █      ██     ██   ██    ██    ██     ██     ██     ██      ██
+      ███████       ███ █   ██   █████ ██   ███ █  ███ █   ██     █████████
+        ███          ███          ███   ██   ███    ███             ████ ███
+                                                                          ███
+    Vitality makes [V]im play nicely with                          █████   ███
+                   [i]Term2 and                                  ████████  ██
+                   [t]mux.                                      █      ████
+
+==============================================================================
+CONTENTS                                                       *clam-contents*
+
+    1. Overview and Usage .............. |VitalityOverview|
+    2. How it Works .................... |VitalityHow|
+    3. License ......................... |VitalityLicense|
+    4. Bugs ............................ |VitalityBugs|
+    5. Contributing .................... |VitalityContributing|
+    6. Changelog ....................... |VitalityChangelog|
+
+==============================================================================
+1. Overview and Usage                         *VitalityOverview* *VitalityUsage*
+
+Vitality is a Vim plugin designed to restore some sanity to the fairly common
+combination of Vim, iTerm2 and (optionally) tmux.
+
+It currently performs two main functions.  First, it makes the |FocusGained|
+and |FocusLost| autocommands fire when iTerm2 gains or loses focus.  Yes, even
+through tmux.
+
+It also handles setting the cursor to and from a bar when entering and exiting
+insert mode.
+
+You shouldn't have to do anything other than install the plugin for all this
+to work.
+
+If you encounter bugs, please report them (|VitalityBugs|).  Terminal codes
+are a fiddly little rabbit hole, so it's entirely possible that things will
+sometimes break.
+==============================================================================
+2. How it Works                                                  *VitalityHow*
+
+You don't need to know this.
+
+You don't WANT to know this.
+
+Turn back now or skip to the |VitalityLicense|.
+
+You've been warned.
+
+------------------------------------------------------------------------------
+2.1  I WILL BE YOUR HANDS AND EYES
+
+DISCLAIMER: I am not a terminal expert by any means.  Some of this may not be
+            entirely correct.  However, it should at least give you a general
+            understanding about what's going on.
+
+DISCLAIMER 2: Any specific examples given apply only to Vim, iTerm 2, and
+              tmux, because that's what Vitality targets.  Other terminals
+              do things differently.
+
+First: some background.  Vim and your terminal program (iTerm2) communicate by
+sending and receiving special strings that you'd never want to type or read in
+real life.  For the sake of brevity we'll call these "escape sequences" in
+this document.
+
+For example: if a program outputs the text: >
+
+    <Esc>]50;CursorShape=1<C-G>
+
+iTerm will change the cursor to a bar shape.
+
+This particular sequence is 19 bytes long.  The <Esc> and <C-G> characters are
+actual single-byte characters: ASCII points 27 and 7 (033 and 07 in octal)
+respectively.
+
+You can try this out yourself.  Open a new iTerm2 window (WITHOUT tmux) and
+run bash, then try running something that will output that magic string: >
+
+    echo -e "hello \033]50;CursorShape=1\007 world"
+
+Your cursor will now be a bar.  Run the command again with a 0 instead of
+a 1 to turn it into a block, or 2 to turn it into an underline.
+
+iTerm2 supports a number of escape sequences.  Here are the ones Vitality
+uses to accomplish its goals (don't worry about what they mean yet):
+
+Set cursor to a bar shape (19 bytes): >
+    <Esc>]50;CursorShape=1<C-G>
+
+Set cursor to a block shape (19 bytes): >
+    <Esc>]50;CursorShape=0<C-G>
+
+Enable focus reporting (8 bytes): >
+    <Esc>[?1004h
+
+Disable focus reporting (8 bytes): >
+    <Esc>[?1004l
+
+Save screen (kind of) (8 bytes): >
+    <Esc>[?1049h
+
+Restore screen (kind of) (8 bytes): >
+    <Esc>[?1049h
+
+You can play with these in bash with echo -e "..." if you want.  Just remember
+to replace <Esc> with \033 and <C-G> with \007.
+
+------------------------------------------------------------------------------
+2.2  YOU ARE IN A MAZE OF TWISTY LITTLE TERMINAL CODES, NONE ALIKE
+
+Before we get to how Vitality uses these codes, there's one other wrinkle to
+take care of: tmux.
+
+When you run Vim inside of tmux it's no longer talking directly to your
+terminal.  Vim talks to tmux, and tmux talks to your terminal.  Tmux will
+intercept the escape sequences and deal with them in its own way.
+
+Usually this is what you want, but in Vitality's case it needs to get some of
+the escape codes all the way through to iTerm.
+
+Recent versions of tmux allow you to wrap escape sequences in two more escape
+sequences, kind of like an envelope.  When tmux sees this special wrapper it
+will strip it off and send the contents directly to your terminal.
+
+The wrapping sequences are: >
+
+    <Esc>Ptmux;
+    <Esc>\
+
+The <Esc> is still a literal escape character.
+
+You also need to double any escape characters in your original sequence.  tmux
+will collapse them into single characters before sending them along.
+
+You can try this out by opening up an iTerm2 window, starting tmux, running
+bash, and then trying to change the cursor shape like before: >
+
+    echo -e "hello \033]50;CursorShape=1\007 world"
+
+It won't work, because tmux intercepts and discards the sequences.  Try
+wrapping it in the tmux wrapping sequences: >
+
+    echo -e "hello \033Ptmux;\033\033]50;CursorShape=1\007\033\\ world"
+                   wwwwwwwwww----DDDD---------------------wwwwww
+    w = wrapper
+    - = original sequence
+    D = doubled escape character
+
+This time your cursor should change!
+
+The cursor-changing and focus reporting (we'll get to those soon) sequences
+need to go to iTerm 2 and so need to be escaped like this.  The screen
+restoring ones, however, need to go to tmux, because tmux is handling the
+drawing of the screen!
+
+------------------------------------------------------------------------------
+2.3  IT IS PITCH BLACK
+
+The trickest part of Vitality is how it restores the |FocusGained| and
+|FocusLost| autocommands.
+
+The first thing to know is that iTerm 2 supports two escape sequences: one
+that turn on "focus reporting" and one that turns it off.  You send these
+sequences as described in the previous section.
+
+When "focus reporting" is turned on, whenever an iTerm 2 window gains focus it
+will send the following string over standard in to whatever program is
+currently running, as if you had typed it yourself: >
+
+    <Esc>[I
+
+This sequence is three bytes long.  Once again, the <Esc> is a literal ASCII
+escape.  A similar sequence is sent when the window loses focus: >
+
+    <Esc>[O
+
+That's an "oh", not a "zero".
+
+Play around with this by opening up a new iTerm 2 window without tmux, and
+running the following command: >
+
+    echo -e "hello \033[?1004h world" && read
+
+Focus and unfocus the window a few times and notice that something like this
+will be appearing on your screen: >
+
+    $ echo -e "hello \033[?1004h world" && read
+    ^[[O^[[I^[[O^[[I
+
+The "^[" stands for an escape character.
+
+At this point you might think we could just add mappings that watch for
+<Esc>[O and <Esc>[I to Vim and be done.  That will work, but isn't ideal.
+
+Imagine adding the following mapping: >
+
+    inoremap <Esc>[O <c-o>:doautocmd FocusLost %<cr>
+
+This will work, but not perfectly.
+
+When you're in insert mode and press <Esc> Vim will wait to see what you type
+next instead of exiting.  Vim doesn't know if [O is coming (and therefore the
+mapping should happen) or if it's you pressing the escape key and wanting it
+to happen right away.
+
+We can get around this by using a combination of Vim features.  But first:
+more background.
+
+------------------------------------------------------------------------------
+2.4  YOU ARE LIKELY TO BE EATEN BY A GRUE
+
+When you press your right arrow key, what happens?  There's no "right" ASCII
+code, so how can it tell Vim that you pressed the arrow?
+
+The answer is the iTerm 2 (or any terminal) will send a series of codes to
+represent the key.  Vim looks for these series, and when it sees them it
+treats it as the appropriate key.  For example, when you press the right arrow
+key Vim will see: >
+
+    <Esc>OC
+
+Three bytes: an escape, an O, then a C.  You can test this by mapping that
+sequence in Vim: >
+
+    nnoremap <Esc>OC :echom "Right was pressed!"<cr>
+
+Press the right arrow key in normal mode and you'll see the message.
+
+You can find out what bytes Vim expects to see for various keys by using the
+|set| command on the keycode: >
+
+    :set <left>?
+
+This will show you what Vim considers your left arrow key to be.
+
+You can try this with other keys too.  Check out the |termcap| help if you
+want to know more about the format of the settings.
+
+Open a new instance of Vim and try typing out the <Esc>, O, and C characters
+manually.  Why doesn't it act like the right arrow key?
+
+To fully understand you'll want to read the |ttimeout|, |timeout|, and
+|ttimeout| helps, but in a nutshell: Vim only treats a sequence as a keycode
+if it happens really, really fast -- far faster than you could possibly type,
+but well within your terminal's ability to send.
+
+So now we know how Vim receives non-ASCII key codes.  Why does that matter?
+Because we're going two more little facts to fix the <Esc>-hanging property of
+our focus-related mappings.
+
+The first fact: although there are usually only 12 or 15 function keys (like
+F1, F2, etc) on a physical keyboard, Vim include support for up to thirty
+seven of them!
+
+Try the following commands in Vim: >
+
+    :set <f37>?
+    :set <f38>?
+
+The second command will fail saying "Unknown option", but the first fails only
+because Vim doesn't know what to expect to receive for F37.
+
+The other fact: you can change these key codes with :set!  If you run this: >
+
+    :set <f37>=<Esc>A
+
+    (you need to enter an actual escape character by pressing Ctrl-V and then
+    the escape key)
+
+Whenever Vim sees an <Esc> followed very quickly by an A it will treat it as
+a press of the F37 key.  You can then map that key like any other: >
+
+    nnoremap <f37> :echo "HOW BIG IS YOUR KEYBOARD?!"<cr>
+
+This avoids the hanging-<Esc> problem that simply mapping the sequence
+manually has.  Well, technically it doesn't, but it only hangs for
+|ttimeoutlen| milliseconds which is usually set to something on the order of
+10, which is far too quick for humans to notice.
+
+You might be able to see where we're going from here.  Vitality maps iTerm 2's
+focus-reporting sequences to two of these higher F keys (F24 and F25 by
+default) and then maps those to the "fire the autocommand" functionality.
+
+------------------------------------------------------------------------------
+2.4  WITH WHAT?  YOUR BARE HANDS?
+
+Now that we know how all this stuff works we can put it all together.
+
+Vitality works by changing four Vim settings:
+
+    |t_ti|  Sent to the terminal from Vim when Vim starts up.
+    |t_te|  Sent to the terminal from Vim when Vim shuts down.
+    |t_SI|  Sent to the terminal from Vim when Vim enters insert mode.
+    |t_EI|  Sent to the terminal from Vim when Vim leaves insert mode.
+
+These settings are strings of the bytes we want to send.
+
+It builds the proper escape codes by checking to make sure we're in iTerm
+2 (and possibly tmux) by looking at some environment variables.  Then it sets
+the four variables above to do the following:
+
+    |t_ti|  Vim startup: enable focus reporting, save the screen.
+    |t_te|  Vim shutdown: disable focus reporting, restore the screen.
+    |t_SI|  Enter insert mode: change cursor to bar.
+    |t_EI|  Leave insert mode: change cursor to block.
+
+All that's left is to map the focus-reporting keys as described in the last
+section and it's done!
+
+You now have a friendlier Vim/tmux/iTerm 2 environment!
+
+==============================================================================
+3. License                                                   *VitalityLicense*
+
+Vitality is MIT/X11 licensed.
+
+==============================================================================
+4. Bugs                                                         *VitalityBugs*
+
+If you find a bug please post it on the issue tracker:
+http://github.com/sjl/vitality.vim/issues/
+
+==============================================================================
+5. Contributing                                         *VitalityContributing*
+
+Think you can make this plugin better?  Awesome!  Fork it on BitBucket or
+GitHub and send a pull request.
+
+BitBucket: http://bitbucket.org/sjl/vitality.vim/
+GitHub: http://github.com/sjl/vitality.vim/
+
+==============================================================================
+6. Changelog                                               *VitalityChangelog*
+
+v1.0.0
+    * Initial stable release.
+
+==============================================================================
