@@ -113,7 +113,7 @@ Save screen (kind of) (8 bytes): >
     <Esc>[?1049h
 
 Restore screen (kind of) (8 bytes): >
-    <Esc>[?1049h
+    <Esc>[?1049l
 
 You can play with these in bash with echo -e "..." if you want.  Just remember
 to replace <Esc> with \033 and <C-G> with \007.
