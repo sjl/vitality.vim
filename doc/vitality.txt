@@ -21,7 +21,7 @@
                    [t]mux.                                      █      ████
 
 ==============================================================================
-CONTENTS                                                       *clam-contents*
+CONTENTS                                                   *vitality-contents*
 
     1. Overview and Usage .............. |VitalityOverview|
     2. How it Works .................... |VitalityHow|
@@ -31,7 +31,7 @@ CONTENTS                                                       *clam-contents*
     6. Changelog ....................... |VitalityChangelog|
 
 ==============================================================================
-1. Overview and Usage                         *VitalityOverview* *VitalityUsage*
+1. Overview and Usage                       *VitalityOverview* *VitalityUsage*
 
 Vitality is a Vim plugin designed to restore some sanity to the fairly common
 combination of Vim, iTerm2 and (optionally) tmux.
