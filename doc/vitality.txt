@@ -24,11 +24,14 @@
 CONTENTS                                                   *vitality-contents*
 
     1. Overview and Usage .............. |VitalityOverview|
-    2. How it Works .................... |VitalityHow|
-    3. License ......................... |VitalityLicense|
-    4. Bugs ............................ |VitalityBugs|
-    5. Contributing .................... |VitalityContributing|
-    6. Changelog ....................... |VitalityChangelog|
+    2. Configuration ................... |VitalityConfig|
+        2.1 g:vitality_fix_cursor ...... |vitality_fix_cursor|
+        2.2 g:vitality_fix_focus ....... |vitality_fix_focus|
+    3. How it Works .................... |VitalityHow|
+    4. License ......................... |VitalityLicense|
+    5. Bugs ............................ |VitalityBugs|
+    6. Contributing .................... |VitalityContributing|
+    7. Changelog ....................... |VitalityChangelog|
 
 ==============================================================================
 1. Overview and Usage                       *VitalityOverview* *VitalityUsage*
@@ -50,7 +53,30 @@ If you encounter bugs, please report them (|VitalityBugs|).  Terminal codes
 are a fiddly little rabbit hole, so it's entirely possible that things will
 sometimes break.
 ==============================================================================
-2. How it Works                                                  *VitalityHow*
+2. Configuration                                              *VitalityConfig*
+
+You can tweak the behavior of Vitality by setting a few variables in your
+:vimrc file. Currently two options are available: >
+
+    let g:vitality_fix_cursor = 0
+    let g:vitality_fix_focus = 0
+
+------------------------------------------------------------------------------
+2.1 g:vitality_fix_cursor                                *vitality_fix_cursor*
+
+Set this to 0 if you want to disable normal/insert block/bar cursor switching.
+
+Default: 1
+
+------------------------------------------------------------------------------
+2.2 g:vitality_fix_focus                                  *vitality_fix_focus*
+
+Set this to 0 if you don't want focus events to be processed.
+
+Default: 1
+
+==============================================================================
+3. How it Works                                                  *VitalityHow*
 
 You don't need to know this.
 
@@ -323,18 +349,18 @@ section and it's done!
 You now have a friendlier Vim/tmux/iTerm 2 environment!
 
 ==============================================================================
-3. License                                                   *VitalityLicense*
+4. License                                                   *VitalityLicense*
 
 Vitality is MIT/X11 licensed.
 
 ==============================================================================
-4. Bugs                                                         *VitalityBugs*
+5. Bugs                                                         *VitalityBugs*
 
 If you find a bug please post it on the issue tracker:
 http://github.com/sjl/vitality.vim/issues/
 
 ==============================================================================
-5. Contributing                                         *VitalityContributing*
+6. Contributing                                         *VitalityContributing*
 
 Think you can make this plugin better?  Awesome!  Fork it on BitBucket or
 GitHub and send a pull request.
@@ -343,7 +369,7 @@ BitBucket: http://bitbucket.org/sjl/vitality.vim/
 GitHub: http://github.com/sjl/vitality.vim/
 
 ==============================================================================
-6. Changelog                                               *VitalityChangelog*
+7. Changelog                                               *VitalityChangelog*
 
 v1.0.0
     * Initial stable release.
