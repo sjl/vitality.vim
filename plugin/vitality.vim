@@ -133,6 +133,7 @@ function! s:Vitality() " {{{
 
         cnoremap <silent> <f24> <c-\>e<SID>DoCmdFocusLost()<cr>
         cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>
+    endif
 
     " }}}
 endfunction " }}}
