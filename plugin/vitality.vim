@@ -82,53 +82,57 @@ function! s:Vitality() " {{{
     " The "focus/save" and "nofocus/restore" each have to be in this order.
     " Trust me, you don't want to go down this rabbit hole.  Just keep them in
     " this order and no one gets hurt.
-    let &t_ti = enable_focus_reporting . save_screen
-    let &t_te = disable_focus_reporting . restore_screen
+    if g:vitality_fix_focus
+        let &t_ti = enable_focus_reporting . save_screen
+        let &t_te = disable_focus_reporting . restore_screen
+    endif
 
     " }}}
     " Insert enter/leave escapes {{{
 
-    " When entering insert mode, change the cursor to a bar.
-    let &t_SI = cursor_to_bar
+    if g:vitality_fix_cursor
+        " When entering insert mode, change the cursor to a bar.
+        let &t_SI = cursor_to_bar
 
-    " When exiting insert mode, change it back to a block.
-    let &t_EI = cursor_to_block
+        " When exiting insert mode, change it back to a block.
+        let &t_EI = cursor_to_block
+    endif
 
     " }}}
     " Focus reporting keys/mappings {{{
+    if g:vitality_fix_focus
+        " Map some of Vim's unused keycodes to the sequences iTerm2 is going to send
+        " on focus lost/gained.
+        "
+        " If you're already using f24 or f25, change them to something else.  Vim
+        " supports up to f37.
+        "
+        " Doing things this way is nicer than just mapping the raw sequences
+        " directly, because Vim won't hang after a bare <Esc> waiting for the rest
+        " of the mapping.
+        execute "set <f24>=\<Esc>[O"
+        execute "set <f25>=\<Esc>[I"
 
-    " Map some of Vim's unused keycodes to the sequences iTerm2 is going to send
-    " on focus lost/gained.
-    "
-    " If you're already using f24 or f25, change them to something else.  Vim
-    " supports up to f37.
-    "
-    " Doing things this way is nicer than just mapping the raw sequences
-    " directly, because Vim won't hang after a bare <Esc> waiting for the rest
-    " of the mapping.
-    execute "set <f24>=\<Esc>[O"
-    execute "set <f25>=\<Esc>[I"
+        " Handle the focus gained/lost signals in each mode separately.
+        "
+        " The goal is to fire the autocmd and restore the state as cleanly as
+        " possible.  This is easy for some modes and hard/impossible for others.
+        "
+        " EXAMPLES:
+        nnoremap <silent> <f24> :doautocmd FocusLost %<cr>
+        nnoremap <silent> <f25> :doautocmd FocusGained %<cr>
 
-    " Handle the focus gained/lost signals in each mode separately.
-    "
-    " The goal is to fire the autocmd and restore the state as cleanly as
-    " possible.  This is easy for some modes and hard/impossible for others.
-    "
-    " EXAMPLES:
-    nnoremap <silent> <f24> :silent doautocmd FocusLost %<cr>
-    nnoremap <silent> <f25> :silent doautocmd FocusGained %<cr>
+        onoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>
+        onoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>
 
-    onoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>
-    onoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>
+        vnoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>gv
+        vnoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>gv
 
-    vnoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>gv
-    vnoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>gv
+        inoremap <silent> <f24> <c-o>:silent doautocmd FocusLost %<cr>
+        inoremap <silent> <f25> <c-o>:silent doautocmd FocusGained %<cr>
 
-    inoremap <silent> <f24> <c-o>:silent doautocmd FocusLost %<cr>
-    inoremap <silent> <f25> <c-o>:silent doautocmd FocusGained %<cr>
-
-    cnoremap <silent> <f24> <c-\>e<SID>DoCmdFocusLost()<cr>
-    cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>
+        cnoremap <silent> <f24> <c-\>e<SID>DoCmdFocusLost()<cr>
+        cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>
 
     " }}}
 endfunction " }}}
