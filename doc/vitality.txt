@@ -371,6 +371,9 @@ GitHub: http://github.com/sjl/vitality.vim/
 ==============================================================================
 7. Changelog                                               *VitalityChangelog*
 
+v1.1.0
+    * Handle focus events in command line mode (thanks aaronjensen).
+    * Make features configurable (thanks dmedvinsky).
 v1.0.0
     * Initial stable release.
 
