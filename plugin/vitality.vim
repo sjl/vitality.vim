@@ -115,35 +115,42 @@ function! s:Vitality() " {{{
     " possible.  This is easy for some modes and hard/impossible for others.
     "
     " EXAMPLES:
-    nnoremap <silent> <f24> :doautocmd FocusLost %<cr>
-    nnoremap <silent> <f25> :doautocmd FocusGained %<cr>
+    nnoremap <silent> <f24> :silent doautocmd FocusLost %<cr>
+    nnoremap <silent> <f25> :silent doautocmd FocusGained %<cr>
 
-    onoremap <silent> <f24> <esc>:doautocmd FocusLost %<cr>
-    onoremap <silent> <f25> <esc>:doautocmd FocusGained %<cr>
+    onoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>
+    onoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>
 
-    vnoremap <silent> <f24> <esc>:doautocmd FocusLost %<cr>gv
-    vnoremap <silent> <f25> <esc>:doautocmd FocusGained %<cr>gv
+    vnoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>gv
+    vnoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>gv
 
-    inoremap <silent> <f24> <c-o>:doautocmd FocusLost %<cr>
-    inoremap <silent> <f25> <c-o>:doautocmd FocusGained %<cr>
+    inoremap <silent> <f24> <c-o>:silent doautocmd FocusLost %<cr>
+    inoremap <silent> <f25> <c-o>:silent doautocmd FocusGained %<cr>
 
-    cnoremap <silent> <f24> <c-r>=vitality#DoFocusLost()<cr>
-    cnoremap <silent> <f25> <c-r>=vitality#DoFocusGained()<cr>
-
-    autocmd FocusLost * :
-    autocmd FocusGained * :
+    cnoremap <silent> <f24> <c-\>e<SID>DoCmdFocusLost()<cr>
+    cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>
 
     " }}}
 endfunction " }}}
 
-function vitality#DoFocusLost()
-  :doautocmd FocusLost %
-  return ''
+function s:DoCmdFocusLost()
+    let cmd = getcmdline()
+    let pos = getcmdpos()
+
+    silent doautocmd FocusLost %
+
+    call setcmdpos(pos)
+    return cmd
 endfunction
 
-function vitality#DoFocusGained()
-  :doautocmd FocusGained %
-  return ''
+function s:DoCmdFocusGained()
+    let cmd = getcmdline()
+    let pos = getcmdpos()
+
+    silent doautocmd FocusGained %
+
+    call setcmdpos(pos)
+    return cmd
 endfunction
 
 if s:inside_iterm
