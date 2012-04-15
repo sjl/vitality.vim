@@ -132,8 +132,24 @@ function! s:Vitality() " {{{
         inoremap <silent> <f25> <c-o>:doautocmd FocusGained %<cr>
     endif
 
+    cnoremap <silent> <f24> <c-r>=vitality#DoFocusLost()<cr>
+    cnoremap <silent> <f25> <c-r>=vitality#DoFocusGained()<cr>
+
+    autocmd FocusLost * :
+    autocmd FocusGained * :
+
     " }}}
 endfunction " }}}
+
+function vitality#DoFocusLost()
+  :doautocmd FocusLost %
+  return ''
+endfunction
+
+function vitality#DoFocusGained()
+  :doautocmd FocusGained %
+  return ''
+endfunction
 
 if s:inside_iterm
     call s:Vitality()
