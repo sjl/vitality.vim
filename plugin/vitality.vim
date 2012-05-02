@@ -24,7 +24,12 @@ if !exists('g:vitality_fix_focus') " {{{
     let g:vitality_fix_focus = 1
 endif " }}}
 
-let s:inside_iterm = exists('$ITERM_PROFILE')
+if exists('g:vitality_always_assume_iterm') " {{{
+    let s:inside_iterm = 1
+else
+    let s:inside_iterm = exists('$ITERM_PROFILE')
+endif " }}}
+
 let s:inside_tmux = exists('$TMUX')
 
 " }}}
