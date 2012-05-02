@@ -23,15 +23,16 @@
 ==============================================================================
 CONTENTS                                                   *vitality-contents*
 
-    1. Overview and Usage .............. |VitalityOverview|
-    2. Configuration ................... |VitalityConfig|
-        2.1 g:vitality_fix_cursor ...... |vitality_fix_cursor|
-        2.2 g:vitality_fix_focus ....... |vitality_fix_focus|
-    3. How it Works .................... |VitalityHow|
-    4. License ......................... |VitalityLicense|
-    5. Bugs ............................ |VitalityBugs|
-    6. Contributing .................... |VitalityContributing|
-    7. Changelog ....................... |VitalityChangelog|
+    1. Overview and Usage ................... |VitalityOverview|
+    2. Configuration ........................ |VitalityConfig|
+        2.1 g:vitality_fix_cursor ........... |vitality_fix_cursor|
+        2.2 g:vitality_fix_focus ............ |vitality_fix_focus|
+        2.3 g:vitality_always_assume_iterm .. |vitality_always_assume_iterm|
+    3. How it Works ......................... |VitalityHow|
+    4. License .............................. |VitalityLicense|
+    5. Bugs ................................. |VitalityBugs|
+    6. Contributing ......................... |VitalityContributing|
+    7. Changelog ............................ |VitalityChangelog|
 
 ==============================================================================
 1. Overview and Usage                       *VitalityOverview* *VitalityUsage*
@@ -56,10 +57,11 @@ sometimes break.
 2. Configuration                                              *VitalityConfig*
 
 You can tweak the behavior of Vitality by setting a few variables in your
-:vimrc file. Currently two options are available: >
+.vimrc file. Currently three options are available: >
 
     let g:vitality_fix_cursor = 0
     let g:vitality_fix_focus = 0
+    let g:vitality_always_assume_iterm = 1
 
 ------------------------------------------------------------------------------
 2.1 g:vitality_fix_cursor                                *vitality_fix_cursor*
@@ -74,6 +76,21 @@ Default: 1
 Set this to 0 if you don't want focus events to be processed.
 
 Default: 1
+
+------------------------------------------------------------------------------
+2.3 g:vitality_always_assume_iterm              *vitality_always_assume_iterm*
+
+By default, Vitality only enables iTerm-specific features when $ITERM_PROFILE
+is present in your environment. However, this value is not preserved once
+you have connected by ssh to another system. If you only use iTerm2, you can
+tell Vim to always assume iTerm features will work.
+
+Set this to 1 if you want Vitality to always assume it is running in iTerm.
+
+Warning: if you set this to true and you run Vim from a terminal other
+than iTerm, it certainly will not work, and you may even get strange output.
+
+Default: depends on the existence of $ITERM_PROFILE.
 
 ==============================================================================
 3. How it Works                                                  *VitalityHow*
