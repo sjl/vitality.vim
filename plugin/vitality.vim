@@ -23,7 +23,24 @@ endif " }}}
 if !exists('g:vitality_fix_focus') " {{{
     let g:vitality_fix_focus = 1
 endif " }}}
+if !exists('g:vitality_change_colors') " {{{
+    let g:vitality_change_colors = 1
+endif " }}}
+if !exists('g:vitality_color_insertmode') " {{{
+  let g:vitality_color_insertmode = "green"
+endif " }}}
+let s:cursor_color_insertmode = "\<Esc>]12;". g:vitality_color_insertmode . "\x7"
+if !exists('g:vitality_color_normalmode') " {{{
+    let g:vitality_color_normalmode = "default"
+endif " }}}
+let s:cursor_color_default = "\<Esc>]112\007"
+if g:vitality_color_normalmode == 'default'
+  let s:cursor_color_normalmode = s:cursor_color_default
+else
+  let s:cursor_color_normalmode = "\<Esc>]12;". g:vitality_color_normalmode . "\x7"
+endif
 
+let s:inside_xterm = exists('$XTERM_VERSION')
 let s:inside_iterm = exists('$ITERM_PROFILE')
 let s:inside_tmux = exists('$TMUX')
 
@@ -58,9 +75,15 @@ function! s:Vitality() " {{{
     let save_screen    = "\<Esc>[?1049h"
     let restore_screen = "\<Esc>[?1049l"
 
-    " These sequences tell iTerm2 to change the cursor shape to a bar or block.
-    let cursor_to_bar   = "\<Esc>]50;CursorShape=1\x7"
-    let cursor_to_block = "\<Esc>]50;CursorShape=0\x7"
+    if s:inside_iterm
+      " These sequences tell iTerm2 to change the cursor shape to a bar or block.
+      let cursor_to_insertmode   = "\<Esc>]50;CursorShape=1\x7"
+      let cursor_to_normalmode = "\<Esc>]50;CursorShape=0\x7"
+    elseif s:inside_xterm
+      " These sequences tell xterm to change the cursor shape to a blinking underline
+      let cursor_to_insertmode   = "\<Esc>[3 q"
+      let cursor_to_normalmode = "\<Esc>[1 q"
+    endif
 
     if s:inside_tmux
         " Some escape sequences (but not all, lol) need to be properly escaped
@@ -69,8 +92,12 @@ function! s:Vitality() " {{{
         let enable_focus_reporting = s:WrapForTmux(enable_focus_reporting)
         let disable_focus_reporting = s:WrapForTmux(disable_focus_reporting)
 
-        let cursor_to_bar = s:WrapForTmux(cursor_to_bar)
-        let cursor_to_block = s:WrapForTmux(cursor_to_block)
+        let cursor_to_insertmode = s:WrapForTmux(cursor_to_insertmode)
+        let cursor_to_normalmode = s:WrapForTmux(cursor_to_normalmode)
+
+        let s:cursor_color_normalmode = s:WrapForTmux(s:cursor_color_normalmode)
+        let s:cursor_color_insertmode = s:WrapForTmux(s:cursor_color_insertmode)
+        let s:cursor_color_default    = s:WrapForTmux(s:cursor_color_default)
     endif
 
     " }}}
@@ -83,8 +110,8 @@ function! s:Vitality() " {{{
     " Trust me, you don't want to go down this rabbit hole.  Just keep them in
     " this order and no one gets hurt.
     if g:vitality_fix_focus
-        let &t_ti = enable_focus_reporting . save_screen
-        let &t_te = disable_focus_reporting . restore_screen
+        let &t_ti = s:cursor_color_normalmode . enable_focus_reporting . save_screen
+        let &t_te = s:cursor_color_default . disable_focus_reporting . restore_screen
     endif
 
     " }}}
@@ -92,10 +119,13 @@ function! s:Vitality() " {{{
 
     if g:vitality_fix_cursor
         " When entering insert mode, change the cursor to a bar.
-        let &t_SI = cursor_to_bar
-
+        let &t_SI .= cursor_to_insertmode
         " When exiting insert mode, change it back to a block.
-        let &t_EI = cursor_to_block
+        let &t_EI .= cursor_to_normalmode
+    endif
+    if g:vitality_change_colors
+        let &t_SI .= s:cursor_color_insertmode
+        let &t_EI .= s:cursor_color_normalmode
     endif
 
     " }}}
@@ -158,6 +188,6 @@ function s:DoCmdFocusGained()
     return cmd
 endfunction
 
-if s:inside_iterm
+if s:inside_iterm || s:inside_xterm
     call s:Vitality()
 endif
