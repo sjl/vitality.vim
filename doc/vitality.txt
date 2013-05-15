@@ -355,7 +355,7 @@ It builds the proper escape codes by checking to make sure we're in iTerm
 2 (and possibly tmux) by looking at some environment variables.  Then it sets
 the four variables above to do the following:
 
-    |t_ti|  Vim startup: enable focus reporting, save the screen.
+    |t_ti|  Vim startup: change cursor to block, enable focus reporting, save the screen.
     |t_te|  Vim shutdown: disable focus reporting, restore the screen.
     |t_SI|  Enter insert mode: change cursor to bar.
     |t_EI|  Leave insert mode: change cursor to block.
