@@ -88,7 +88,7 @@ function! s:Vitality() " {{{
     " Trust me, you don't want to go down this rabbit hole.  Just keep them in
     " this order and no one gets hurt.
     if g:vitality_fix_focus
-        let &t_ti = enable_focus_reporting . save_screen
+        let &t_ti = cursor_to_block . enable_focus_reporting . save_screen
         let &t_te = disable_focus_reporting . restore_screen
     endif
 
