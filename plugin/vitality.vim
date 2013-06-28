@@ -122,7 +122,8 @@ function! s:Vitality() " {{{
         "
         " The goal is to fire the autocmd and restore the state as cleanly as
         " possible.  This is easy for some modes and hard/impossible for others.
-        nnoremap <silent> <f24> :doautocmd FocusLost %<cr>
+
+        nnoremap <silent> <f24> :silent doautocmd FocusLost %<cr>
         nnoremap <silent> <f25> :doautocmd FocusGained %<cr>
 
         onoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>
