@@ -388,6 +388,10 @@ GitHub: http://github.com/sjl/vitality.vim/
 ==============================================================================
 7. Changelog                                               *VitalityChangelog*
 
+v2.0.0
+    * Force cursor to a block on start (in case another program has changed it).
+    * Updated for the latest versions of tmux and iTerm with some much nicer
+      wrapping.
 v1.1.0
     * Handle focus events in command line mode (thanks aaronjensen).
     * Make features configurable (thanks dmedvinsky).
