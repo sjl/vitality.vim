@@ -88,8 +88,8 @@ function! s:Vitality() " {{{
     " Trust me, you don't want to go down this rabbit hole.  Just keep them in
     " this order and no one gets hurt.
     if g:vitality_fix_focus
-        let &t_ti = cursor_to_block . enable_focus_reporting . save_screen
-        let &t_te = disable_focus_reporting . restore_screen
+        let &t_ti = cursor_to_block . enable_focus_reporting . save_screen . &t_ti
+        let &t_te = disable_focus_reporting . restore_screen . &t_te
     endif
 
     " }}}
@@ -97,10 +97,10 @@ function! s:Vitality() " {{{
 
     if g:vitality_fix_cursor
         " When entering insert mode, change the cursor to a bar.
-        let &t_SI = cursor_to_bar
+        let &t_SI = cursor_to_bar . &t_SI
 
         " When exiting insert mode, change it back to a block.
-        let &t_EI = cursor_to_block
+        let &t_EI = cursor_to_block . &t_EI
     endif
 
     " }}}
