@@ -23,6 +23,18 @@ Use Pathogen to install.
 You shouldn't need to do anything else, but you can read `:help vitality` if
 you're curious.
 
+Note on later versions of tmux (1.9.x or higher)
+------------------------------------------------
+
+If you find that `FocusLost` events are not working in later versions of tmux
+try adding the following line to your .tmux.conf.
+
+```
+set -g focus-events on
+```
+
+Don't forget to restart all your tmux sessions for this setting to take effect.
+
 License
 -------
 
