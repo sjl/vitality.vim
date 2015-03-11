@@ -63,6 +63,13 @@ You can tweak the behavior of Vitality by setting a few variables in your
     let g:vitality_fix_focus = 0
     let g:vitality_always_assume_iterm = 1
 
+You might also need to add some configuration to your tmux setup. Later
+versions of tmux (>= 1.9) have Focus events disabled by default. Add the
+following line to your ~/.tmux.conf and then restart or reload all your tmux
+sessions.
+
+    :source-file ~/.tmux.conf
+
 ------------------------------------------------------------------------------
 2.1 g:vitality_fix_cursor                                *vitality_fix_cursor*
 
