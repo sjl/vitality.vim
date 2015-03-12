@@ -68,7 +68,7 @@ versions of tmux (>= 1.9) have Focus events disabled by default. Add the
 following line to your ~/.tmux.conf and then restart or reload all your tmux
 sessions.
 
-    :source-file ~/.tmux.conf
+    set -g focus-events on
 
 ------------------------------------------------------------------------------
 2.1 g:vitality_fix_cursor                                *vitality_fix_cursor*
