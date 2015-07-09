@@ -24,6 +24,18 @@ if !exists('g:vitality_fix_focus') " {{{
     let g:vitality_fix_focus = 1
 endif " }}}
 
+" iTerm2 cursor types:
+"
+" Block = 0
+" Bar = 1
+" Underline = 2
+if !exists('g:vitality_normal_cursor') " {{{
+    let g:vitality_normal_cursor = 0
+endif " }}}
+if !exists('g:vitality_insert_cursor') " {{{
+    let g:vitality_insert_cursor = 1
+endif " }}}
+
 if exists('g:vitality_always_assume_iterm') " {{{
     let s:inside_iterm = 1
 else
@@ -63,9 +75,9 @@ function! s:Vitality() " {{{
     let save_screen    = "\<Esc>[?1049h"
     let restore_screen = "\<Esc>[?1049l"
 
-    " These sequences tell iTerm2 to change the cursor shape to a bar or block.
-    let cursor_to_bar   = "\<Esc>]50;CursorShape=1\x7"
-    let cursor_to_block = "\<Esc>]50;CursorShape=0\x7"
+    " These sequences tell iTerm2 to change the cursor shape.
+    let cursor_to_normal = "\<Esc>]50;CursorShape=" . g:vitality_normal_cursor . "\x7"
+    let cursor_to_insert = "\<Esc>]50;CursorShape=" . g:vitality_insert_cursor . "\x7"
 
     if s:inside_tmux
         " Some escape sequences (but not all, lol) need to be properly escaped
@@ -74,8 +86,8 @@ function! s:Vitality() " {{{
         let enable_focus_reporting = s:WrapForTmux(enable_focus_reporting) . enable_focus_reporting
         let disable_focus_reporting = disable_focus_reporting
 
-        let cursor_to_bar = s:WrapForTmux(cursor_to_bar)
-        let cursor_to_block = s:WrapForTmux(cursor_to_block)
+        let cursor_to_normal = s:WrapForTmux(cursor_to_normal)
+        let cursor_to_insert = s:WrapForTmux(cursor_to_insert)
     endif
 
     " }}}
@@ -88,7 +100,7 @@ function! s:Vitality() " {{{
     " Trust me, you don't want to go down this rabbit hole.  Just keep them in
     " this order and no one gets hurt.
     if g:vitality_fix_focus
-        let &t_ti = cursor_to_block . enable_focus_reporting . save_screen
+        let &t_ti = cursor_to_normal . enable_focus_reporting . save_screen
         let &t_te = disable_focus_reporting . restore_screen
     endif
 
@@ -96,11 +108,11 @@ function! s:Vitality() " {{{
     " Insert enter/leave escapes {{{
 
     if g:vitality_fix_cursor
-        " When entering insert mode, change the cursor to a bar.
-        let &t_SI = cursor_to_bar
+        " When entering insert mode, change the cursor to the insert cursor.
+        let &t_SI = cursor_to_insert
 
-        " When exiting insert mode, change it back to a block.
-        let &t_EI = cursor_to_block
+        " When exiting insert mode, change it back to normal.
+        let &t_EI = cursor_to_normal
     endif
 
     " }}}
