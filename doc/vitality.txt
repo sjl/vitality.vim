@@ -57,9 +57,11 @@ sometimes break.
 2. Configuration                                              *VitalityConfig*
 
 You can tweak the behavior of Vitality by setting a few variables in your
-.vimrc file. Currently three options are available: >
+.vimrc file. Currently five options are available: >
 
     let g:vitality_fix_cursor = 0
+    let g:vitality_normal_cursor = 0
+    let g:vitality_insert_cursor = 1
     let g:vitality_fix_focus = 0
     let g:vitality_always_assume_iterm = 1
 
@@ -71,14 +73,38 @@ Set this to 0 if you want to disable normal/insert block/bar cursor switching.
 Default: 1
 
 ------------------------------------------------------------------------------
-2.2 g:vitality_fix_focus                                  *vitality_fix_focus*
+2.2 g:vitality_normal_cursor                          *vitality_normal_cursor*
+
+Set this to the cursor type you want to have in normal mode. iTerm2 has three
+cursor types:
+
+Block = 0
+Bar = 1
+Underline = 2
+
+Default: 0
+
+------------------------------------------------------------------------------
+2.3 g:vitality_insert_cursor                          *vitality_insert_cursor*
+
+Set this to the cursor type you want to have in insert mode. iTerm2 has three
+cursor types:
+
+Block = 0
+Bar = 1
+Underline = 2
+
+Default: 1
+
+------------------------------------------------------------------------------
+2.4 g:vitality_fix_focus                                  *vitality_fix_focus*
 
 Set this to 0 if you don't want focus events to be processed.
 
 Default: 1
 
 ------------------------------------------------------------------------------
-2.3 g:vitality_always_assume_iterm              *vitality_always_assume_iterm*
+2.5 g:vitality_always_assume_iterm              *vitality_always_assume_iterm*
 
 By default, Vitality only enables iTerm-specific features when $ITERM_PROFILE
 is present in your environment. However, this value is not preserved once
