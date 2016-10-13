@@ -26,8 +26,10 @@ CONTENTS                                                   *vitality-contents*
     1. Overview and Usage ................... |VitalityOverview|
     2. Configuration ........................ |VitalityConfig|
         2.1 g:vitality_fix_cursor ........... |vitality_fix_cursor|
-        2.2 g:vitality_fix_focus ............ |vitality_fix_focus|
-        2.3 g:vitality_always_assume_iterm .. |vitality_always_assume_iterm|
+        2.2 g:vitality_normal_cursor ........ |vitality_normal_cursor|
+        2.3 g:vitality_insert_cursor ........ |vitality_insert_cursor|
+        2.4 g:vitality_fix_focus ............ |vitality_fix_focus|
+        2.5 g:vitality_always_assume_iterm .. |vitality_always_assume_iterm|
     3. How it Works ......................... |VitalityHow|
     4. License .............................. |VitalityLicense|
     5. Bugs ................................. |VitalityBugs|
@@ -414,6 +416,9 @@ GitHub: http://github.com/sjl/vitality.vim/
 ==============================================================================
 7. Changelog                                               *VitalityChangelog*
 
+Unreleased
+    * Add vitality_normal_cursor and vitality_insert_cursor to allow configuring
+      more cursor types (thanks lnikkila).
 v2.0.0
     * Force cursor to a block on start (in case another program has changed it).
     * Updated for the latest versions of tmux and iTerm with some much nicer
