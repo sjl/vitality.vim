@@ -100,7 +100,7 @@ function! s:Vitality() " {{{
     " Trust me, you don't want to go down this rabbit hole.  Just keep them in
     " this order and no one gets hurt.
     if g:vitality_fix_focus
-        let &t_ti = cursor_to_normal . enable_focus_reporting . save_screen
+        let &t_ti = cursor_to_normal . enable_focus_reporting . save_screen . &t_ti
         let &t_te = disable_focus_reporting . restore_screen
     endif
 
@@ -109,10 +109,10 @@ function! s:Vitality() " {{{
 
     if g:vitality_fix_cursor
         " When entering insert mode, change the cursor to the insert cursor.
-        let &t_SI = cursor_to_insert
+        let &t_SI = cursor_to_insert . &t_SI
 
         " When exiting insert mode, change it back to normal.
-        let &t_EI = cursor_to_normal
+        let &t_EI = cursor_to_normal . &t_EI
     endif
 
     " }}}
