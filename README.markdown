@@ -29,11 +29,10 @@ Note on later versions of tmux (1.9.x or higher)
 If you find that `FocusLost` events are not working in later versions of tmux
 try adding the following line to your .tmux.conf.
 
-```
-set -g focus-events on
-```
+    set -g focus-events on
 
-Don't forget to restart all your tmux sessions for this setting to take effect.
+Don't forget to restart all your tmux sessions for this setting to take effect
+(or just run the command in tmux itself to avoid having to restart).
 
 License
 -------
