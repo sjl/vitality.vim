@@ -136,7 +136,7 @@ function! s:Vitality() " {{{
         " possible.  This is easy for some modes and hard/impossible for others.
 
         nnoremap <silent> <f24> :silent doautocmd FocusLost %<cr>
-        nnoremap <silent> <f25> :doautocmd FocusGained %<cr>
+        nnoremap <silent> <f25> :silent doautocmd FocusGained %<cr>
 
         onoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>
         onoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>
