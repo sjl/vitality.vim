@@ -427,6 +427,8 @@ Unreleased
     * Add vitality_normal_cursor and vitality_insert_cursor to allow configuring
       more cursor types (thanks lnikkila).
     * Preserve existing terminal codes the user has set (thanks aaronjensen).
+    * Don't spew errors on FocusGained if no autocommands are defined (thanks
+      xsimov).
 v2.0.0
     * Force cursor to a block on start (in case another program has changed it).
     * Updated for the latest versions of tmux and iTerm with some much nicer
