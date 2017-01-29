@@ -144,8 +144,8 @@ function! s:Vitality() " {{{
         vnoremap <silent> <f24> <esc>:silent doautocmd FocusLost %<cr>gv
         vnoremap <silent> <f25> <esc>:silent doautocmd FocusGained %<cr>gv
 
-        inoremap <silent> <f24> <c-o>:silent doautocmd FocusLost %<cr>
-        inoremap <silent> <f25> <c-o>:silent doautocmd FocusGained %<cr>
+        inoremap <silent> <f24> <c-\><c-o>:silent doautocmd FocusLost %<cr>
+        inoremap <silent> <f25> <c-\><c-o>:silent doautocmd FocusGained %<cr>
 
         cnoremap <silent> <f24> <c-\>e<SID>DoCmdFocusLost()<cr>
         cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>
