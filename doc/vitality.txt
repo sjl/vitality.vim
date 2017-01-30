@@ -423,6 +423,9 @@ GitHub: http://github.com/sjl/vitality.vim/
 ==============================================================================
 7. Changelog                                               *VitalityChangelog*
 
+Unreleased
+    * Fix a bug in FocusGained/FocusLost when omnicompletion is active (thanks
+      thaerkh).
 v2.1.0
     * Add vitality_normal_cursor and vitality_insert_cursor to allow configuring
       more cursor types (thanks lnikkila).
