@@ -35,6 +35,9 @@ endif " }}}
 if !exists('g:vitality_insert_cursor') " {{{
     let g:vitality_insert_cursor = 1
 endif " }}}
+if !exists('g:vitality_replace_cursor') " {{{
+    let g:vitality_replace_cursor = 2
+endif " }}}
 
 if exists('g:vitality_always_assume_iterm') " {{{
     let s:inside_iterm = 1
@@ -76,8 +79,9 @@ function! s:Vitality() " {{{
     let restore_screen = "\<Esc>[?1049l"
 
     " These sequences tell iTerm2 to change the cursor shape.
-    let cursor_to_normal = "\<Esc>]50;CursorShape=" . g:vitality_normal_cursor . "\x7"
-    let cursor_to_insert = "\<Esc>]50;CursorShape=" . g:vitality_insert_cursor . "\x7"
+    let cursor_to_normal  = "\<Esc>]50;CursorShape=" . g:vitality_normal_cursor . "\x7"
+    let cursor_to_insert  = "\<Esc>]50;CursorShape=" . g:vitality_insert_cursor . "\x7"
+    let cursor_to_replace = "\<Esc>]50;CursorShape=" . g:vitality_replace_cursor . "\x7"
 
     if s:inside_tmux
         " Some escape sequences (but not all, lol) need to be properly escaped
@@ -88,6 +92,7 @@ function! s:Vitality() " {{{
 
         let cursor_to_normal = s:WrapForTmux(cursor_to_normal)
         let cursor_to_insert = s:WrapForTmux(cursor_to_insert)
+        let cursor_to_replace = s:WrapForTmux(cursor_to_replace)
     endif
 
     " }}}
@@ -111,7 +116,10 @@ function! s:Vitality() " {{{
         " When entering insert mode, change the cursor to the insert cursor.
         let &t_SI = cursor_to_insert . &t_SI
 
-        " When exiting insert mode, change it back to normal.
+        " When entering replace mode, change the cursor to the replace cursor.
+        let &t_SR = cursor_to_replace . &t_SR
+
+        " When exiting insert mode or replace mode, change it back to normal.
         let &t_EI = cursor_to_normal . &t_EI
     endif
 
