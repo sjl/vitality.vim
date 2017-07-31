@@ -38,6 +38,9 @@ endif " }}}
 if !exists('g:vitality_replace_cursor') " {{{
     let g:vitality_replace_cursor = 2
 endif " }}}
+if !exists('g:vitality_shell_cursor') " {{{
+    let g:vitality_shell_cursor = 0
+endif " }}}
 
 if exists('g:vitality_always_assume_iterm') " {{{
     let s:inside_iterm = 1
@@ -82,6 +85,7 @@ function! s:Vitality() " {{{
     let cursor_to_normal  = "\<Esc>]50;CursorShape=" . g:vitality_normal_cursor . "\x7"
     let cursor_to_insert  = "\<Esc>]50;CursorShape=" . g:vitality_insert_cursor . "\x7"
     let cursor_to_replace = "\<Esc>]50;CursorShape=" . g:vitality_replace_cursor . "\x7"
+    let cursor_to_quit    = "\<Esc>]50;CursorShape=" . g:vitality_shell_cursor . "\x7"
 
     if s:inside_tmux
         " Some escape sequences (but not all, lol) need to be properly escaped
@@ -90,9 +94,10 @@ function! s:Vitality() " {{{
         let enable_focus_reporting = s:WrapForTmux(enable_focus_reporting) . enable_focus_reporting
         let disable_focus_reporting = disable_focus_reporting
 
-        let cursor_to_normal = s:WrapForTmux(cursor_to_normal)
-        let cursor_to_insert = s:WrapForTmux(cursor_to_insert)
+        let cursor_to_normal  = s:WrapForTmux(cursor_to_normal)
+        let cursor_to_insert  = s:WrapForTmux(cursor_to_insert)
         let cursor_to_replace = s:WrapForTmux(cursor_to_replace)
+        let cursor_to_quit    = s:WrapForTmux(cursor_to_quit)
     endif
 
     " }}}
@@ -121,6 +126,9 @@ function! s:Vitality() " {{{
 
         " When exiting insert mode or replace mode, change it back to normal.
         let &t_EI = cursor_to_normal . &t_EI
+
+        " When quitting vim restore cursor to the default.
+        let &t_te = cursor_to_quit . &t_te
     endif
 
     " }}}

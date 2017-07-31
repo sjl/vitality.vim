@@ -29,8 +29,9 @@ CONTENTS                                                   *vitality-contents*
         2.2 g:vitality_normal_cursor ........ |vitality_normal_cursor|
         2.3 g:vitality_insert_cursor ........ |vitality_insert_cursor|
         2.4 g:vitality_replace_cursor ....... |vitality_replace_cursor|
-        2.5 g:vitality_fix_focus ............ |vitality_fix_focus|
-        2.6 g:vitality_always_assume_iterm .. |vitality_always_assume_iterm|
+        2.5 g:vitality_shell_cursor ......... |vitality_replace_cursor|
+        2.6 g:vitality_fix_focus ............ |vitality_fix_focus|
+        2.7 g:vitality_always_assume_iterm .. |vitality_always_assume_iterm|
     3. How it Works ......................... |VitalityHow|
     4. License .............................. |VitalityLicense|
     5. Bugs ................................. |VitalityBugs|
@@ -66,6 +67,7 @@ You can tweak the behavior of Vitality by setting a few variables in your
     let g:vitality_normal_cursor = 0
     let g:vitality_insert_cursor = 1
     let g:vitality_replace_cursor = 2
+    let g:vitality_shell_cursor = 0
     let g:vitality_fix_focus = 0
     let g:vitality_always_assume_iterm = 1
 
@@ -120,14 +122,27 @@ Underline = 2
 Default: 2
 
 ------------------------------------------------------------------------------
-2.5 g:vitality_fix_focus                                  *vitality_fix_focus*
+2.5 g:vitality_shell_cursor                            *vitality_shell_cursor*
+
+Set this to the cursor type you want when you quit vim. This is useful for
+when you have your terminal's default shell cursor set to something other than
+the block. iTerm2 has three cursor types:
+
+Block = 0
+Bar = 1
+Underline = 2
+
+Default: 0
+
+------------------------------------------------------------------------------
+2.6 g:vitality_fix_focus                                  *vitality_fix_focus*
 
 Set this to 0 if you don't want focus events to be processed.
 
 Default: 1
 
 ------------------------------------------------------------------------------
-2.6 g:vitality_always_assume_iterm              *vitality_always_assume_iterm*
+2.7 g:vitality_always_assume_iterm              *vitality_always_assume_iterm*
 
 By default, Vitality only enables iTerm-specific features when $ITERM_PROFILE
 is present in your environment. However, this value is not preserved once
