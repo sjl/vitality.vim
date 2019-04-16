@@ -426,6 +426,7 @@ GitHub: http://github.com/sjl/vitality.vim/
 Unreleased
     * Fix a bug in FocusGained/FocusLost when omnicompletion is active (thanks
       thaerkh).
+    * Handle focus events in terminal mode (thanks iamFIREcracker).
 v2.1.0
     * Add vitality_normal_cursor and vitality_insert_cursor to allow configuring
       more cursor types (thanks lnikkila).
