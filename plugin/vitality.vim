@@ -147,6 +147,11 @@ function! s:Vitality() " {{{
         inoremap <silent> <f24> <c-\><c-o>:silent doautocmd FocusLost %<cr>
         inoremap <silent> <f25> <c-\><c-o>:silent doautocmd FocusGained %<cr>
 
+        if has('terminal')
+            tnoremap <silent> <f24> <C-W>N:silent doautocmd FocusLost %<cr>a
+            tnoremap <silent> <f25> <C-W>N:silent doautocmd FocusGained %<cr>a
+        endif
+
         cnoremap <silent> <f24> <c-\>e<SID>DoCmdFocusLost()<cr>
         cnoremap <silent> <f25> <c-\>e<SID>DoCmdFocusGained()<cr>
     endif
