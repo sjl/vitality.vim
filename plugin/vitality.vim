@@ -101,7 +101,7 @@ function! s:Vitality() " {{{
     " this order and no one gets hurt.
     if g:vitality_fix_focus
         let &t_ti = cursor_to_normal . enable_focus_reporting . save_screen . &t_ti
-        let &t_te = disable_focus_reporting . restore_screen
+        let &t_te = disable_focus_reporting . restore_screen . &t_te
     endif
 
     " }}}
